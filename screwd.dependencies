@@ -35,11 +35,6 @@
    "branch":      "n7x-caf"
   },
   {
-   "repository":  "DirtyUnicorns/android_external_libnfc-nci",
-   "target_path": "external/libnfc-nci",
-   "branch":      "n7x-caf"
-  },
-  {
    "repository":  "DirtyUnicorns/android_vendor_codeaurora_telephony",
    "target_path": "vendor/codeaurora/telephony",
    "branch":      "n7x"
