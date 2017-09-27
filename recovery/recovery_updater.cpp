@@ -162,9 +162,9 @@ err_ret:
 }
 
 /* verify_modem("MODEM_VERSION") */
-Value * VerifyModemFn(const char *name, State *state, const std::vector<std::unique_ptr<Expr>>& argv) {
+Value * VerifyModemFn(const char *name, State *state, int argc, Expr *argv[]) {
     char current_modem_version[MODEM_VER_BUF_LEN];
-    size_t i;
+    char* modem_version;
     int ret;
     struct tm tm1, tm2;
 
@@ -177,23 +177,21 @@ Value * VerifyModemFn(const char *name, State *state, const std::vector<std::uni
     memset(&tm1, 0, sizeof(tm));
     strptime(current_modem_version, "%Y-%m-%d %H:%M:%S", &tm1);
 
-    std::vector<std::string> modem_version;
-    if (!ReadArgs(state, argv, &modem_version)) {
+    ret = ReadArgs(state, argv, 1, &modem_version);
+    if (ret < 0) {
         return ErrorAbort(state, kArgsParsingFailure, "%s() error parsing arguments", name);
     }
 
-    ret = 0;
-    for (i = 0; i < argv.size(); i++) {
-        uiPrintf(state, "Checking for MODEM build time-stamp %s\n", modem_version[i].c_str());
+    uiPrintf(state, "Checking for MODEM build time-stamp %s\n", modem_version);
 
-        memset(&tm2, 0, sizeof(tm));
-        strptime(modem_version[i].c_str(), "%Y-%m-%d %H:%M:%S", &tm2);
+    memset(&tm2, 0, sizeof(tm));
+    strptime(modem_version, "%Y-%m-%d %H:%M:%S", &tm2);
 
-        if (mktime(&tm1) >= mktime(&tm2)) {
-            ret = 1;
-            break;
-        }
+    if (mktime(&tm1) >= mktime(&tm2)) {
+        ret = 1;
     }
+
+    free(modem_version);
 
     return StringValue(strdup(ret ? "1" : "0"));
 }
