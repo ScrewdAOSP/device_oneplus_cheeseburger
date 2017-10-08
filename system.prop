@@ -193,9 +193,6 @@ persist.dbg.wfc_avail_ovr=1
 # WiFi
 wifi.interface=wlan0
 
-# DU Updater
-ro.du.updater=cheeseburger
-
 # Google Assistant
 ro.opa.eligible_device=true
 
